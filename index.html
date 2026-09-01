@@ -1,239 +1,71 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>LA ZONA POINT FIGHTING</title>
 <style>
-  * { 
-    box-sizing: border-box; 
-    -webkit-tap-highlight-color: transparent; 
-    margin: 0; 
-    padding: 0; 
-  }
+    * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { touch-action:manipulation; overscroll-behavior:none; height:100vh; overflow:hidden; }
+  body { background:#111; color:#fff; font-family:Arial; margin:0; text-align:center; user-select:none; -webkit-user-select:none; }
 
-  html, body { 
-    width: 100vw;
-    height: 100vh;
-    height: 100svh;
-    overflow: hidden; 
-    background: #111; 
-    color: #fff; 
-    font-family: Arial, sans-serif; 
-    text-align: center; 
-    user-select: none; 
-    -webkit-user-select: none; 
-    touch-action: manipulation;
-  }
+.evento { font-size:4.2vw; background:#000; padding:14px 0; font-weight:900; letter-spacing:3px; border-bottom:5px solid #ffc107; text-transform:uppercase; }
+.evento sup { font-size:1.4vw; color:#ffc107; margin-left:6px; vertical-align:super; }
 
-  /* ENVOLTORIO PRINCIPAL QUE FUERZA EL APORTRAIT -> LANDSCAPE */
-  .app-wrapper {
-    width: 100vw;
-    height: 100vh;
-    height: 100svh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Si el celular está vertical, rotamos todo el contenedor a 90 grados */
-  @media screen and (orientation: portrait) {
-    .app-wrapper {
-      position: absolute;
-      width: 100vh;
-      width: 100svh;
-      height: 100vw;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(90deg);
-      transform-origin: center;
-    }
-  }
-
-  .evento { 
-    height: 6vh;
-    line-height: 6vh;
-    font-size: 2.2vh; 
-    background: #000; 
-    font-weight: 900; 
-    letter-spacing: 4px; 
-    border-bottom: 3px solid #ffc107; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .container { 
-    display: flex; 
-    width: 100%; 
-    height: 94vh; 
-  }
-
-  .jugador { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-    position: relative; 
-    padding: 1vh 1vw; 
-  }
-
-  #rojo { background: #c62828; }
-  #azul { background: #1565c0; }
-
-  .nombre { 
-    font-size: 4vh; 
-    font-weight: 900; 
-    text-shadow: 0 0 8px rgba(0,0,0,0.8); 
-  }
-
-  .puntos { 
-    font-size: 26vh; 
-    font-weight: 900; 
-    line-height: 0.9; 
-    text-shadow: 0 0 20px rgba(0,0,0,0.7); 
-    -webkit-text-stroke: 2px #000; 
-  }
-
-  .faltas-box { 
-    font-size: 2.2vh; 
-    background: rgba(0,0,0,0.4); 
-    padding: 1vh; 
-    border-radius: 10px; 
-    border: 2px solid rgba(255,255,255,0.2); 
-    display: flex;
-    flex-direction: column;
-    gap: 0.8vh;
-  }
-
-  .faltas-box span { 
-    font-size: 2.8vh; 
-    font-weight: 900; 
-    text-shadow: 0 0 8px rgba(0,0,0,0.9); 
-  }
-
-  .faltas-box.alerta { 
-    background: rgba(255,0,0,0.5); 
-    border: 3px solid #ff5252; 
-    box-shadow: 0 0 15px rgba(255,0,0,0.8); 
-  }
-
-  .botones-puntos {
-    display: flex;
-    justify-content: center;
-    gap: 1vw;
-    margin-top: 1vh;
-  }
-
-  .botones-puntos button { 
-    font-size: 2.5vh; 
-    padding: 1vh 2vw; 
-    border: 3px solid #000; 
-    border-radius: 12px; 
-    cursor: pointer; 
-    font-weight: 900; 
-  }
-
-  .btn-suma { background: #fff; color: #000; }
-  .btn-suma:active { background: #e0e0e0; transform: scale(0.95); }
-
-  .btn-resta { background: #000; color: #fff; border-color: #fff; }
-  .btn-resta:active { background: #333; transform: scale(0.95); }
-
-  .botones-faltas { 
-    display: flex; 
-    justify-content: center; 
-    gap: 0.5vw; 
-  }
-
-  .botones-faltas button { 
-    font-size: 2vh; 
-    padding: 1vh 0; 
-    border: 2px solid #000; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    flex: 1; 
-    font-weight: 900; 
-  }
-
-  .btn-amarillo { background: #ffc107; color: #000; }
-  .btn-amarillo:active { background: #ffb300; transform: scale(0.95); }
-
-  .btn-gris { background: #616161; color: #fff; }
-  .btn-gris:active { background: #424242; transform: scale(0.95); }
-
-  .centro-controles {
-    flex: 0.9;
-    background: #000;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    border-left: 4px solid #ffc107;
-    border-right: 4px solid #ffc107;
-    padding: 1vh 0.5vw;
-  }
-
-  .timer { 
-    font-size: 14vh; 
-    background: #000; 
-    width: 100%;
-    font-weight: 900; 
-    transition: all 0.3s; 
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .timer.corriendo { background: #2e7d32; }
-  .timer.termino { background: #d32f2f; }
-  .timer.ultimos { background: #d32f2f; animation: parpadear 0.5s infinite; }
-
-  @keyframes parpadear { 50% { opacity: 0.5; } }
-
-  .controles {
-    display: flex;
-    flex-direction: column;
-    gap: 1vh;
-    width: 90%;
-  }
-
-  .controles button { 
-    font-size: 2vh; 
-    padding: 1.2vh 0; 
-    font-weight: bold; 
-    border-radius: 8px; 
-    border: none; 
-    cursor: pointer; 
-    width: 100%;
-    background: #333;
-    color: #fff;
-  }
-
-  .controles button:active { transform: scale(0.95); }
-
-  .aviso { 
-    position: absolute; 
-    top: 20%; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    background: #000; 
-    padding: 2vh 4vw; 
-    border-radius: 12px; 
-    font-size: 3vh; 
-    display: none; 
-    z-index: 10; 
-    border: 3px solid #ffc107; 
-  }
+.timer { font-size:10vw; background:#000; padding:5px; font-weight:900; transition:all 0.3s; }
+.timer.corriendo { background:#2e7d32; }
+.timer.termino { background:#d32f2f; }
+.timer.ultimos { background:#d32f2f; animation:parpadear 0.5s infinite; }
+@keyframes parpadear { 50% { opacity: 0.5; } }
+.container { display:flex; width:100vw; height:calc(100vh - 8vw); }
+.jugador { flex:1; display:flex; flex-direction:column; justify-content:space-between; position:relative; padding:10px 0; }
+  #rojo { background:#c62828; }
+  #azul { background:#1565c0; }
+.nombre { font-size:3vw; font-weight:900; text-shadow:0 0 8px rgba(0,0,0,0.8); }
+.puntos { font-size:18vw; font-weight:900; line-height:1; text-shadow:0 0 20px rgba(0,0,0,0.7); -webkit-text-stroke:2px #000; }
+.faltas-box { font-size:1.8vw; background:rgba(0,0,0,0.4); margin:0 8px; padding:8px; border-radius:10px; border:2px solid rgba(255,255,255,0.2); }
+.faltas-box span { font-size:2.5vw; font-weight:900; text-shadow:0 0 8px rgba(0,0,0,0.9); }
+.faltas-box.alerta { background:rgba(255,0,0,0.5); border:3px solid #ff5252; box-shadow:0 0 15px rgba(255,0,0,0.8); }
+.botones-puntos button { font-size:2.2vw; padding:10px 15px; margin:5px; border:3px solid #000; border-radius:12px; cursor:pointer; font-weight:900; min-height:44px; }
+.btn-suma { background:#fff; color:#000; }
+.btn-suma:active { background:#e0e0e0; transform:scale(0.95); }
+.btn-resta { background:#000; color:#fff; border-color:#fff; }
+.btn-resta:active { background:#333; transform:scale(0.95); }
+.botones-faltas { display:flex; justify-content:center; gap:5px; flex-wrap:nowrap; }
+.botones-faltas button { font-size:1.6vw; padding:10px 5px; border:3px solid #000; border-radius:10px; cursor:pointer; flex:1; min-width:0; font-weight:900; min-height:44px; }
+.btn-amarillo { background:#ffc107; color:#000; }
+.btn-amarillo:active { background:#ffb300; transform:scale(0.95); }
+.btn-gris { background:#616161; color:#fff; }
+.btn-gris:active { background:#424242; transform:scale(0.95); }
+.centro-controles { flex:1.2; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; border-left:4px solid #ffc107; border-right:4px solid #ffc107; }
+.controles button { font-size:1.8vw; padding:10px 15px; margin:5px; font-weight:bold; min-height:44px; border-radius:10px; border:none; cursor:pointer; }
+.controles button:active { transform:scale(0.95); }
+.aviso { position:absolute; top:20%; left:50%; transform:translateX(-50%); background:#000; padding:15px 30px; border-radius:12px; font-size:2vw; display:none; z-index:10; border:3px solid #ffc107; }
+.rotar-aviso { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#000; z-index:9999; flex-direction:column; justify-content:center; align-items:center; }
+.rotar-aviso h1 { font-size:8vw; color:#ffc107; }
+.rotar-aviso p { font-size:4vw; }
+@media screen and (orientation: portrait) {.container,.evento { display:none; }.rotar-aviso { display:flex; } }
+@media (max-width: 900px) and (orientation: landscape) {
+.nombre { font-size:4vw; }
+.puntos { font-size:20vw; }
+.timer { font-size:12vw; }
+.faltas-box { font-size:2.2vw; }
+.faltas-box span { font-size:3vw; }
+.botones-puntos button { font-size:2.8vw; }
+.botones-faltas button { font-size:2vw; }
+.controles button { font-size:2.2vw; }
+}
 </style>
 </head>
 <body>
+  <div class="rotar-aviso">
+    <h1>🔄 GIRA TU CELULAR</h1>
+    <p>Este marcador funciona solo en horizontal</p>
+  </div>
 
-<div class="app-wrapper">
-  <div class="evento">LA ZONA POINT FIGHTING</div>
+  <div class="evento">LA ZONA POINT FIGHTING<sup>®️</sup></div>
 
   <div class="container">
-    <!-- ROJO -->
     <div class="jugador" id="rojo">
       <div>
         <div class="nombre">ROJO</div>
@@ -253,8 +85,6 @@
         </div>
       </div>
     </div>
-
-    <!-- CENTRO CON TIMER -->
     <div class="centro-controles">
       <div class="timer" id="timer">2:00</div>
       <div class="aviso" id="aviso"></div>
@@ -266,8 +96,6 @@
         <button onclick="document.documentElement.requestFullscreen()">⛶ Full</button>
       </div>
     </div>
-
-    <!-- AZUL -->
     <div class="jugador" id="azul">
       <div>
         <div class="nombre">AZUL</div>
@@ -288,35 +116,17 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- SONIDOS -->
 <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
 <audio id="campana" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" preload="auto"></audio>
-
 <script>
-let datos = {
-  rojo: { puntos: 0, faltas: 0, salidas: 0 },
-  azul: { puntos: 0, faltas: 0, salidas: 0 }
-};
+let datos = { rojo: { puntos: 0, faltas: 0, salidas: 0 }, azul: { puntos: 0, faltas: 0, salidas: 0 } };
 let tiempo = 120;
 let corriendo = false;
 let timerEl = document.getElementById('timer');
 const beep = document.getElementById('beep');
 const campana = document.getElementById('campana');
-
-function vibrar() {
-  if (navigator.vibrate) navigator.vibrate(50);
-}
-
-function mostrarAviso(txt) {
-  let aviso = document.getElementById('aviso');
-  aviso.textContent = txt;
-  aviso.style.display = 'block';
-  vibrar();
-  setTimeout(() => { aviso.style.display = 'none'; }, 1500);
-}
-
+function vibrar() { if (navigator.vibrate) navigator.vibrate(50); }
+function mostrarAviso(txt) { let aviso = document.getElementById('aviso'); aviso.textContent = txt; aviso.style.display = 'block'; vibrar(); setTimeout(() => { aviso.style.display = 'none'; }, 1500); }
 function actualizar() {
   document.getElementById('puntosRojo').textContent = datos.rojo.puntos;
   document.getElementById('puntosAzul').textContent = datos.azul.puntos;
@@ -324,97 +134,26 @@ function actualizar() {
   document.getElementById('salidasRojo').textContent = datos.rojo.salidas;
   document.getElementById('faltasAzul').textContent = datos.azul.faltas;
   document.getElementById('salidasAzul').textContent = datos.azul.salidas;
-
   document.getElementById('boxRojo').classList.toggle('alerta', datos.rojo.faltas >= 2 || datos.rojo.salidas >= 3);
   document.getElementById('boxAzul').classList.toggle('alerta', datos.azul.faltas >= 2 || datos.azul.salidas >= 3);
-
-  let min = Math.floor(tiempo / 60);
-  let seg = tiempo % 60;
-  timerEl.textContent = `${min}:${seg.toString().padStart(2,'0')}`;
-
-  timerEl.className = 'timer';
-  if (corriendo) timerEl.classList.add('corriendo');
-  if (tiempo === 0) timerEl.classList.add('termino');
-  if (tiempo <= 10 && tiempo > 0) timerEl.classList.add('ultimos');
+  let min = Math.floor(tiempo / 60); let seg = tiempo % 60; timerEl.textContent = ${min}:${seg.toString().padStart(2,'0')};
+  timerEl.className = 'timer'; if (corriendo) timerEl.classList.add('corriendo'); if (tiempo === 0) timerEl.classList.add('termino'); if (tiempo <= 10 && tiempo > 0) timerEl.classList.add('ultimos');
 }
-
 function tick() {
   if (corriendo && tiempo > 0) {
-    tiempo--;
-
-    if(tiempo <= 3 && tiempo > 0) {
-      beep.currentTime = 0;
-      beep.play().catch(()=>{});
-    }
-
-    if (tiempo === 0) {
-      corriendo = false;
-      campana.currentTime = 0;
-      campana.play().catch(()=>{});
-      vibrar();
-      mostrarAviso("FIN DEL ROUND");
-    }
-    actualizar();
+    tiempo--; if(tiempo <= 3 && tiempo > 0) { beep.currentTime = 0; beep.play().catch(()=>{}); }
+    if (tiempo === 0) { corriendo = false; campana.currentTime = 0; campana.play().catch(()=>{}); vibrar(); mostrarAviso("FIN DEL ROUND"); } actualizar();
   }
 }
-
 function sumarPunto(equipo) { datos[equipo].puntos++; vibrar(); actualizar(); }
 function restarPunto(equipo) { datos[equipo].puntos = Math.max(0, datos[equipo].puntos-1); vibrar(); actualizar(); }
-
-function sumarFalta(equipo) {
-  datos[equipo].faltas++;
-  if (datos[equipo].faltas === 2) {
-    let rival = equipo === 'rojo'? 'azul' : 'rojo';
-    datos[rival].puntos++;
-    mostrarAviso(`+1 ${rival.toUpperCase()} por 2da falta`);
-  }
-  vibrar();
-  actualizar();
-}
-
-function restarFalta(equipo) {
-  datos[equipo].faltas = Math.max(0, datos[equipo].faltas-1);
-  vibrar();
-  actualizar();
-}
-
-function sumarSalida(equipo) {
-  datos[equipo].salidas++;
-  if (datos[equipo].salidas >= 3) {
-    let rival = equipo === 'rojo'? 'azul' : 'rojo';
-    datos[rival].puntos++;
-    mostrarAviso(`+1 ${rival.toUpperCase()} por salida`);
-  }
-  vibrar();
-  actualizar();
-}
-
-function restarSalida(equipo) {
-  datos[equipo].salidas = Math.max(0, datos[equipo].salidas-1);
-  vibrar();
-  actualizar();
-}
-
-function toggleTimer() {
-  corriendo = !corriendo;
-  if(corriendo) { beep.play().then(()=>beep.pause()).catch(()=>{}); }
-  vibrar();
-  actualizar();
-}
-
-function resetTodo() {
-  datos = {
-    rojo: { puntos: 0, faltas: 0, salidas: 0 },
-    azul: { puntos: 0, faltas: 0, salidas: 0 }
-  };
-  tiempo = 120;
-  corriendo = false;
-  vibrar();
-  actualizar();
-}
-
+function sumarFalta(equipo) { datos[equipo].faltas++; if (datos[equipo].faltas === 2) { let rival = equipo === 'rojo'? 'azul' : 'rojo'; datos[rival].puntos++; mostrarAviso(+1 ${rival.toUpperCase()} por 2da falta); } vibrar(); actualizar(); }
+function restarFalta(equipo) { datos[equipo].faltas = Math.max(0, datos[equipo].faltas-1); vibrar(); actualizar(); }
+function sumarSalida(equipo) { datos[equipo].salidas++; if (datos[equipo].salidas >= 3) { let rival = equipo === 'rojo'? 'azul' : 'rojo'; datos[rival].puntos++; mostrarAviso(+1 ${rival.toUpperCase()} por salida); } vibrar(); actualizar(); }
+function restarSalida(equipo) { datos[equipo].salidas = Math.max(0, datos[equipo].salidas-1); vibrar(); actualizar(); }
+function toggleTimer() { corriendo =!corriendo; if(corriendo) { beep.play().then(()=>beep.pause()).catch(()=>{}); } vibrar(); actualizar(); }
+function resetTodo() { datos = { rojo: { puntos: 0, faltas: 0, salidas: 0 }, azul: { puntos: 0, faltas: 0, salidas: 0 } }; tiempo = 120; corriendo = false; vibrar(); actualizar(); }
 function ajustarTiempo(seg) { tiempo = Math.max(0, tiempo + seg); vibrar(); actualizar(); }
-
 document.addEventListener('dblclick', (e) => e.preventDefault());
 setInterval(tick, 1000);
 actualizar();
